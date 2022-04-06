@@ -32,15 +32,15 @@ class PostsApiControllerTest {
     private PostsRepository postsRepository;
 
     @Test
-    public void registerTest() throws Exception{
+    public void registerTest() throws Exception {
         //given
         String title = "title";
         String content = "content";
         PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder()
-                                                       .title(title)
-                                                       .content(content)
-                                                       .author("kmr2644@gmail.com")
-                                                       .build();
+                                                            .title(title)
+                                                            .content(content)
+                                                            .author("kmr2644@gmail.com")
+                                                            .build();
 
         String url = "http://localhost:" + port + "/api/v1/posts";
 
@@ -60,21 +60,44 @@ class PostsApiControllerTest {
     }
 
     @Test
-    public void modifiedTest() throws Exception{
+    public void postsDeleteTest() throws Exception {
+
+        //given
         String title = "title";
         String content = "content";
         Posts save = postsRepository.save(Posts.builder()
-                                              .title(title)
-                                              .content(content)
-                                              .author("kmr")
-                                              .build());
+                                               .title(title)
+                                               .content(content)
+                                               .author("kmr")
+                                               .build());
+        Long id = save.getId();
+        String url = "http://localhost:" + port + "/api/v1/posts/" + save.getId();
+        HttpEntity<Posts> postsHttpEntity = new HttpEntity<>(save);
+        //when
+        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, postsHttpEntity, Long.class);
+        //then
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getBody()).isGreaterThanOrEqualTo(0L);
 
+        List<Posts> list = postsRepository.findAll();
+
+        assertThat(list).isEmpty();
+    }
+    @Test
+    public void modifiedTest() throws Exception {
+        String title = "title";
+        String content = "content";
+        Posts save = postsRepository.save(Posts.builder()
+                                               .title(title)
+                                               .content(content)
+                                               .author("kmr")
+                                               .build());
 
 
         PostsUpdateRequestDto updateRequestDto = PostsUpdateRequestDto.builder()
-                                                           .title("updateTitle")
-                                                           .content("Update Content")
-                                                           .build();
+                                                                      .title("updateTitle")
+                                                                      .content("Update Content")
+                                                                      .build();
 
         String url = "http://localhost:" + port + "/api/v1/posts/" + save.getId();
         System.out.println("url = " + url);
