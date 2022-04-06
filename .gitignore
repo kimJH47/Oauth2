@@ -1,4 +1,6 @@
 
+
+applicaton-oauth.
 # Created by https://www.toptal.com/developers/gitignore/api/gradle,intellij+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=gradle,intellij+all
 
@@ -113,5 +115,4 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-applicaton-oauth.properties
 # End of https://www.toptal.com/developers/gitignore/api/gradle,intellij+all
