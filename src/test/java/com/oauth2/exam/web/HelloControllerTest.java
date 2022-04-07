@@ -1,8 +1,12 @@
 package com.oauth2.exam.web;
 
+import com.oauth2.exam.config.auth.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.core.Is.is;
@@ -12,12 +16,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /*@SpringBootTest
 @AutoConfigureMockMvc*/
-@WebMvcTest
+@WebMvcTest(controllers = HelloController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class)
+
+        })
+
 class HelloControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
+    @WithMockUser(roles = "USER")
     @Test
     public void returnHello() throws Exception {
         String hello = "hello";
@@ -26,7 +36,7 @@ class HelloControllerTest {
            .andExpect(content().string(hello));
 
     }
-
+    @WithMockUser(roles = "USER")
     @Test
     public void helloDtoRequestTest() throws Exception {
         String name = "test";
@@ -36,7 +46,7 @@ class HelloControllerTest {
                    .param("amount", String.valueOf(amount)))
            .andExpect(status().isOk())
            .andExpect(jsonPath("$.name", is(name)))
-           .andExpect(jsonPath("$.amount",is(amount)));
+           .andExpect(jsonPath("$.amount", is(amount)));
     }
 
 }
