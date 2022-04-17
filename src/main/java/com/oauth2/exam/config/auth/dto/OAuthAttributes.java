@@ -34,7 +34,10 @@ public class OAuthAttributes {
     public static OAuthAttributes of(String registrationId, String userNameAttributeName, Map<String, Object> attributes) {
         if ("naver".equals(registrationId)) {
             return ofNaver("id", attributes);
+        } else if ("kakao".equals(registrationId)) {
+            return ofKakao("id", attributes);
         }
+
         return ofGoogle(userNameAttributeName, attributes);
     }
 
@@ -59,6 +62,20 @@ public class OAuthAttributes {
                               .build();
     }
 
+    private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object>attributes) {
+
+        Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+
+        return OAuthAttributes.builder()
+                              .name((String) profile.get("nickname"))
+                              .email((String) account.get("email"))
+                              .picture((String) profile.get("profile_image_url"))
+                              .attributes(attributes)
+                              .nameAttributeKey(userNameAttributeName)
+                              .build();
+    }
+
     /**
      * User 앤티티 생성
      * 앤티티를 생성하는 시점은 처음  가입할때
@@ -70,7 +87,7 @@ public class OAuthAttributes {
                    .name(name)
                    .email(email)
                    .picture(picture)
-                   .role(Role.GUEST)
+                   .role(Role.USER)
                    .build();
     }
 }
