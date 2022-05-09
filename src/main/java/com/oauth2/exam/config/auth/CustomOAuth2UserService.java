@@ -32,7 +32,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
 
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
+                OAuth2UserService < OAuth2UserRequest, OAuth2User > delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         /**
@@ -40,6 +40,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
          */
         String registrationId = userRequest.getClientRegistration()
                                            .getRegistrationId();
+        System.out.println("==================");
+        System.out.println("registrationId = " + registrationId);
         /**
          * OAuth2 로그인 진행시 키가되는 필드값(PrimaryKey 같은 의미)
          */
